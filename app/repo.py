@@ -31,7 +31,7 @@ class Repo:
             self.name, self.name, url_prefix=self.info['view_path'],
         )
 
-        def view_mirror():
+        def view_mirror(_: str = None):
             path = os.path.join(self.mirror_dir, request.path[1:])
 
             if os.path.exists(path):
@@ -56,6 +56,7 @@ class Repo:
 
             blueprint.add_url_rule('%s' % path, view_func=view_mirror)
             blueprint.add_url_rule('%s/' % path, view_func=view_mirror)
+            blueprint.add_url_rule('%s/<string:_>' % path, view_func=view_mirror)
 
         blueprint.add_url_rule('/', view_func=view_mirror)
 
