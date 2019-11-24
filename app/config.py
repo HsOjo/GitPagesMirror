@@ -9,6 +9,7 @@ CONFIG_PATH = './config.json'
 class Config:
     path_repos = './repos'
     sync_path = '/sync'
+    web_hook_secret = ''
     repos = {}  # type: Dict[str, Dict[str, object]]
     default_page = [
         'index.html',

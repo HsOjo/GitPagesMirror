@@ -1,10 +1,11 @@
+import hmac
 import os
 import threading
 
 import git
 from flask import Blueprint, request, send_file, abort
 
-from app.common import get_current_time
+from app.common import *
 from app.config import Config
 
 
@@ -56,8 +57,15 @@ class Repo:
 
         blueprint.add_url_rule('/', view_func=view_mirror)
 
-        @blueprint.route(Config.sync_path)
+        @blueprint.route(Config.sync_path, methods=['GET', 'POST'])
         def sync():
+            if Config.web_hook_secret != '':
+                sign = request.headers.get('X-Hub-Signature', '')
+                count_sign = hmac.new(Config.web_hook_secret.encode(), request.get_data(), 'sha1').hexdigest()
+                count_sign = 'sha1=%s' % count_sign
+                if count_sign != sign:
+                    return abort(403)
+
             threading.Thread(target=self._sync).start()
             return 'Now Syncing...'
 

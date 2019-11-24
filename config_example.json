@@ -1,6 +1,7 @@
 {
   "path_repos": "./repos",
   "sync_path": "/sync",
+  "web_hook_secret": "GitPagesMirror",
   "default_page": [
     "index.html",
     "index.htm",
