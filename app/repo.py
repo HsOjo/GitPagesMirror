@@ -40,10 +40,11 @@ class Repo:
                         filename = page
                         break
 
-            path = os.path.abspath(os.path.join(dirname, filename))
-            if filename is None or not os.path.exists(path):
+            if filename is None:
                 return abort(404)
 
+            path = os.path.abspath(os.path.join(dirname, filename))
+            
             return send_file(path)
 
         for r, _, _ in os.walk(self.mirror_dir):

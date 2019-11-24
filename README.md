@@ -1,1 +1,1 @@
-# PageMirror
+# GitPagesMirror
