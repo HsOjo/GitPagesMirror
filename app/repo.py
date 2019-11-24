@@ -1,6 +1,7 @@
 import hmac
 import os
 import threading
+import traceback
 
 import git
 from flask import Blueprint, request, send_file, abort
@@ -87,10 +88,16 @@ class Repo:
 
         print('[%s] Sync Start.' % get_current_time())
 
-        if not os.path.exists(self.mirror_dir):
-            git.Repo.clone_from(url=self.info['git_url'], to_path=self.mirror_dir)
-        else:
-            git.Repo(self.mirror_dir).remote().pull()
+        while True:
+            try:
+                if not os.path.exists(self.mirror_dir):
+                    git.Repo.clone_from(url=self.info['git_url'], to_path=self.mirror_dir)
+                else:
+                    git.Repo(self.mirror_dir).remote().pull()
+                break
+            except:
+                traceback.print_exc()
+                print('[%s] Sync Failed, Retry.' % get_current_time())
 
         print('[%s] Sync Finish.' % get_current_time())
 
