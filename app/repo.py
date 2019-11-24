@@ -32,7 +32,11 @@ class Repo:
         )
 
         def view_mirror(_: str = None):
-            path = os.path.join(self.mirror_dir, request.path[1:])
+            req_path = request.path.replace(self.info['view_path'], '', 1)
+            if req_path != '' and req_path[0] == '/':
+                req_path = req_path[1:]
+
+            path = os.path.join(self.mirror_dir, self.info.get('source_folder', ''), req_path)
 
             if os.path.exists(path):
                 if os.path.isdir(path):
