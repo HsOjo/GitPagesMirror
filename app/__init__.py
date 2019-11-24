@@ -1,3 +1,4 @@
+import os
 from typing import List
 
 from flask import Flask
@@ -16,5 +17,8 @@ def create_app():
         repo = Repo(repo_name)
         app.register_blueprint(repo.blueprint)
         repos.append(repo)
+
+    if not os.path.exists(Config.path_repos):
+        os.makedirs(Config.path_repos, exist_ok=True)
 
     return app
