@@ -30,31 +30,31 @@ class Repo:
             self.name, self.name, url_prefix=self.info['view_path'],
         )
 
-        def view_mirror(filename=None):
-            request_dir = os.path.dirname(request.path[1:])
-            dirname = os.path.join(self.mirror_dir, request_dir)
-            if filename is None:
-                for page in Config.default_page:
-                    path = os.path.join(dirname, page)
-                    if os.path.exists(path):
-                        filename = page
-                        break
+        def view_mirror():
+            path = os.path.join(self.mirror_dir, request.path[1:])
 
-            if filename is None:
+            if os.path.exists(path):
+                if os.path.isdir(path):
+                    for page in Config.default_page:
+                        path_page = os.path.join(path, page)
+                        if os.path.exists(path_page) and os.path.isfile(path_page):
+                            path = path_page
+                            break
+
+                if not os.path.isfile(path):
+                    return abort(403)
+            else:
                 return abort(404)
 
-            path = os.path.abspath(os.path.join(dirname, filename))
-            
-            return send_file(path)
+            return send_file(os.path.abspath(path))
 
         for r, _, _ in os.walk(self.mirror_dir):
             path = r.replace(self.mirror_dir, '')
+            if '/.git' == path[:5]:
+                continue
 
-            rule = '%s/<string:filename>' % path
-            rule_r = '%s/' % path
-
-            blueprint.add_url_rule(rule, view_func=view_mirror)
-            blueprint.add_url_rule(rule_r, view_func=view_mirror)
+            blueprint.add_url_rule('%s' % path, view_func=view_mirror)
+            blueprint.add_url_rule('%s/' % path, view_func=view_mirror)
 
         blueprint.add_url_rule('/', view_func=view_mirror)
 
