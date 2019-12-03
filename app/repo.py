@@ -1,10 +1,12 @@
 import hmac
 import os
+import shutil
 import threading
 import traceback
 
 import git
 from flask import Blueprint, request, send_file, abort
+from git import GitCommandError
 
 from app.common import *
 from app.config import Config
@@ -100,6 +102,8 @@ class Repo:
                 else:
                     git.Repo(self.mirror_dir).remote().pull()
                 break
+            except GitCommandError:
+                shutil.rmtree(self.mirror_dir)
             except:
                 traceback.print_exc()
                 print('[%s] Sync Failed, Retry.' % get_current_time())
