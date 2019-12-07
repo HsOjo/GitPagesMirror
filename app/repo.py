@@ -33,12 +33,8 @@ class Repo:
             self.name, self.name, url_prefix=self.info['view_path'],
         )
 
-        def view_mirror(_: str = None):
-            req_path = request.path.replace(self.info['view_path'], '', 1)
-            if req_path != '' and req_path[0] == '/':
-                req_path = req_path[1:]
-
-            path = os.path.join(self.mirror_dir, self.info.get('source_folder', ''), req_path)
+        def view_mirror(path: str = ''):
+            path = os.path.join(self.mirror_dir, self.info.get('source_folder', ''), path)
 
             if os.path.exists(path):
                 if os.path.isdir(path):
@@ -55,16 +51,8 @@ class Repo:
 
             return send_file(os.path.abspath(path))
 
-        for r, _, _ in os.walk(self.mirror_dir):
-            path = r.replace(self.mirror_dir, '')
-            if '/.git' == path[:5]:
-                continue
-
-            blueprint.add_url_rule('%s' % path, view_func=view_mirror)
-            blueprint.add_url_rule('%s/' % path, view_func=view_mirror)
-            blueprint.add_url_rule('%s/<string:_>' % path, view_func=view_mirror)
-
         blueprint.add_url_rule('/', view_func=view_mirror)
+        blueprint.add_url_rule('/<path:path>', view_func=view_mirror)
 
         @blueprint.route(Config.sync_path, methods=['GET', 'POST'])
         def sync():
