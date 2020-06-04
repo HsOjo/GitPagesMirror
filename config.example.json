@@ -12,7 +12,7 @@
     "blog": {
       "git_url": "https://github.com/HsOjo/hsojo.github.io.git",
       "view_path": "/",
-      "source_folder": "doc"
+      "source_folder": ""
     }
   }
 }
