@@ -127,3 +127,5 @@ dmypy.json
 
 repos
 config.json
+uwsgi.ini
+git-pages-mirror.service

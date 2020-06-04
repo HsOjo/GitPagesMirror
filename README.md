@@ -58,3 +58,20 @@ export LC_ALL='en_US.UTF-8'
 ```
 
 * Put This Program To "/var/www".
+
+### With Nginx (uWSGI)
+
+* Add path mappings.
+
+```text
+location / {
+    include uwsgi_params;
+    uwsgi_pass unix:///tmp/git-pages-mirror.sock;
+}
+```
+
+* Run uWSGI.
+
+```bash
+uwsgi uwsgi.ini
+```

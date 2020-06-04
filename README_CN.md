@@ -58,3 +58,20 @@ export LC_ALL='en_US.UTF-8'
 ```
 
 * 将这个程序放到 "/var/www"。
+
+### 使用 Nginx (uWSGI)
+
+* 添加路径映射。
+
+```text
+location / {
+    include uwsgi_params;
+    uwsgi_pass unix:///tmp/git-pages-mirror.sock;
+}
+```
+
+* 启动uWSGI。
+
+```bash
+uwsgi uwsgi.ini
+```

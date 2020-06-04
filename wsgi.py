@@ -11,4 +11,4 @@ if os.path.exists('%s/venv' % doc_root):
     if os.path.exists(pkgs_path):
         sys.path.append(pkgs_path)
 
-application = __import__('app').create_app()
+application = getattr(__import__('app'), 'create_app')()

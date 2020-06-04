@@ -2,3 +2,4 @@ flask
 Flask_Script
 typing
 gitpython
+uwsgi

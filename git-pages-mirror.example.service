@@ -1,0 +1,10 @@
+[Unit]
+Description=GitPagesMirror uWSGI Daemon
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/GitPagesMirror
+ExecStart=uwsgi uwsgi.ini
+
+[Install]
+WantedBy=multi-user.target
