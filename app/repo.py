@@ -12,11 +12,6 @@ from app.common import *
 from app.config import Config
 
 
-class MyProgressPrinter(git.RemoteProgress):
-    def update(self, op_code, cur_count, max_count=None, message=''):
-        print(op_code, cur_count, max_count, cur_count / (max_count or 100.0), message or "NO MESSAGE")
-
-
 class Repo:
     def __init__(self, name):
         self.info = Config.repos[name]
@@ -81,7 +76,7 @@ class Repo:
                 return
             self._status = 1
 
-        print('[%s] Sync Start.' % get_current_time())
+        self.print('Sync start at %s.' % get_current_time())
 
         while True:
             try:
@@ -94,9 +89,12 @@ class Repo:
                 shutil.rmtree(self.mirror_dir)
             except:
                 traceback.print_exc()
-                print('[%s] Sync Failed, Retry.' % get_current_time())
+                self.print('Sync failed at %s, retry.' % get_current_time())
 
-        print('[%s] Sync Finish.' % get_current_time())
+        self.print('Sync finish at %s.' % get_current_time())
 
         with self._lock:
             self._status = 0
+
+    def print(self, content):
+        print('[%s] %s' % (self.name, content))
