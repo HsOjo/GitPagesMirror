@@ -59,7 +59,7 @@ class Repo:
                     return abort(403)
 
             threading.Thread(target=self._sync).start()
-            return 'Now Syncing...'
+            return 'Syncing %s at %s.' % (self.name, get_current_time())
 
         return blueprint
 
