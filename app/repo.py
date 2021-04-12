@@ -1,12 +1,10 @@
 import hmac
 import os
-import shutil
 import threading
 import traceback
 
 import git
 from flask import Blueprint, request, send_file, abort
-from git import GitCommandError
 
 from app.common import *
 from app.config import Config
@@ -83,10 +81,9 @@ class Repo:
                 if not os.path.exists(self.mirror_dir):
                     git.Repo.clone_from(url=self.info['git_url'], to_path=self.mirror_dir)
                 else:
-                    git.Repo(self.mirror_dir).remote().pull()
+                    git.Repo(self.mirror_dir).remote().fetch()
+                    git.Repo(self.mirror_dir).active_branch.reset(working_tree=True)
                 break
-            except GitCommandError:
-                shutil.rmtree(self.mirror_dir)
             except:
                 traceback.print_exc()
                 self.print('Sync failed at %s, retry.' % get_current_time())
