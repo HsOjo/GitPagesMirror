@@ -82,7 +82,7 @@ class Repo:
                     git.Repo.clone_from(url=self.info['git_url'], to_path=self.mirror_dir)
                 else:
                     git.Repo(self.mirror_dir).remote().fetch()
-                    git.Repo(self.mirror_dir).active_branch.reset(working_tree=True)
+                    git.Repo(self.mirror_dir).head.reset(working_tree=True)
                 break
             except:
                 traceback.print_exc()
